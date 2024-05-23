@@ -1,0 +1,23 @@
+name: 'Get list of tar.gz files'
+description: 'Get list of tar.gz files which start with given string'
+
+inputs:
+  filename-beginning:
+    description: 'The beginning of tar.gz file name'
+    required: true
+
+outputs:
+  full-filename:
+    description: "The full filename of tar.gz file"
+    value: ${{ steps.get-name.outputs.full-filename }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get tar.gz name
+      id: get-name
+      run: |
+        full_filename="$(ls | grep -E '${{ inputs.filename-beginning }}.*\.tar\.gz$' | head -1)"
+        echo "Found the following tar.gz file: $full_filename"
+        echo "full-filename=$full_filename" >> $GITHUB_OUTPUT
+      shell: bash
